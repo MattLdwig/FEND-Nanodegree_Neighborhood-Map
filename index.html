@@ -1,0 +1,24 @@
+<html lang='en'>
+<head>
+  <title>External Data</title>
+  <meta charset='utf-8' />
+  <link rel='stylesheet' href='css/style.css' />
+</head>
+<body>
+<ul data-bind="foreach: listOfPlaces">
+  <li>
+    <span data-bind="text: category"></span>
+    <h3 data-bind="text: name"></h3>
+    <span data-bind="text: rating"></span>
+  </li>
+</ul>
+  <script src='js/knockout.js'></script>
+  <script src="js/mapping.js"></script>
+  <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+  <script src="js/mapping.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
