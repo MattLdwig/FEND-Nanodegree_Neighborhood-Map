@@ -5,8 +5,8 @@
   <link rel='stylesheet' href='css/style.css' />
 </head>
 <body>
-<form>
-<input data-bind="value: userInput, event: { keyup: filterPlace }">
+<form data-bind="submit: filterPlace">
+<input data-bind="value: userInput">
 </form>
 <ul data-bind="foreach: filteredPlaces">
   <li>
