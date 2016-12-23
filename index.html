@@ -5,7 +5,10 @@
   <link rel='stylesheet' href='css/style.css' />
 </head>
 <body>
-<ul data-bind="foreach: listOfPlaces">
+<form>
+<input data-bind="value: userInput, event: { keyup: filterPlace }">
+</form>
+<ul data-bind="foreach: filteredPlaces">
   <li>
     <span data-bind="text: category"></span>
     <h3 data-bind="text: name"></h3>

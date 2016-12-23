@@ -9,6 +9,7 @@ function Place(name, lat, lng, category, rating) {
 function places() {
 	var self = this;
 	self.listOfPlaces = ko.observableArray([]);
+
 	self.loadFoursquarePlaces = function() {
 	  var clientSecret = "UKDBXCJSYFG0AL3MDBMGWHHJSMAIR3S5V5NZISHJQOIKOMEP",
 	  	  clientId = "KKTBRM0OM2QIUW5TVMRYK42XV2FIU1AAN5SZY4OMOJB504VU",
@@ -31,6 +32,22 @@ function places() {
 	  });
 	}();
 
+	self.userInput = ko.observable($('input').val().toLowerCase());
+	self.filteredPlaces = ko.observableArray([]);
+
+	self.filterPlace = function(target,event) {
+
+		self.filteredPlaces = ([]);
+
+		for ( var i = 0; i < self.listOfPlaces().length ; i++) {
+			if (self.listOfPlaces()[i].category().toLowerCase().indexOf(userInput()) > -1 ) {
+				console.log('true');
+				self.filteredPlaces.push(self.listOfPlaces()[i]);
+			}
+			else {console.log('false');}
+		}
+		
+	}
 }
 
 ko.applyBindings(places());
