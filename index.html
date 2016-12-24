@@ -3,6 +3,9 @@
   <title>External Data</title>
   <meta charset='utf-8' />
   <link rel='stylesheet' href='css/style.css' />
+  <script 
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFZGqA1XbC777e1I20vYVmhBi0Cgv1cgg">
+    </script>
 </head>
 <body>
 <form data-bind="submit: filterPlace">
@@ -15,6 +18,7 @@
     <span data-bind="text: rating"></span>
   </li>
 </ul>
+<div id="map"></div>
   <script src='js/knockout.js'></script>
   <script src="js/mapping.js"></script>
   <script

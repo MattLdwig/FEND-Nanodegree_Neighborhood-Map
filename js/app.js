@@ -8,6 +8,7 @@ function Place(name, lat, lng, category, rating) {
 
 function places() {
 	var self = this;
+	var map;
 	self.listOfPlaces = ko.observableArray([]);
 	self.filteredPlaces = ko.observableArray([]);
 
@@ -29,6 +30,7 @@ function places() {
 	  					 		new Place(element.venue.name, element.venue.location.lat, 
 	  							element.venue.location.lng, element.venue.categories[0].pluralName, element.venue.rating)
 	  					 	);
+
 	  					})
 	  });
 	}();
@@ -46,7 +48,19 @@ function places() {
 			} else {
 				self.filteredPlaces(listOfPlaces());
 			}
+	
 	});
+
+	self.initMap = function() {
+		map = new google.maps.Map(document.getElementById('map'), { 
+    		center: {lat: 45.5016889, lng: -73.567256},
+    		zoom: 13
+  		});
+	}();
+
+	self.markers = ko.observableArray([]);
+
+	
 }
 
 ko.applyBindings(places());
