@@ -1,14 +1,23 @@
+var map;
+
 function Place(name, lat, lng, category, rating) {
+	var marker;
 	this.name = ko.observable(name);
 	this.lat = ko.observable(lat);
 	this.lng = ko.observable(lng);
 	this.category = ko.observable(category);
 	this.rating = ko.observable(rating);
+
+	marker = new google.maps.Marker ({
+	    position: new google.maps.LatLng(this.lat(), this.lng()),
+	    map: map,
+	    title: this.name()
+  	});
+	this.marker = ko.observable(marker);
 }
 
 function places() {
 	var self = this;
-	var map;
 	self.listOfPlaces = ko.observableArray([]);
 	self.filteredPlaces = ko.observableArray([]);
 
@@ -35,18 +44,24 @@ function places() {
 	  });
 	}();
 
-	self.userInput = ko.observable($('input').val().toLowerCase());
+	self.userInput = ko.observable($('input').val());
 
 	self.filterPlace = ko.computed(function() {
 		self.filteredPlaces([]);
 			if(userInput() !== ""){
 				return ko.utils.arrayFilter(self.listOfPlaces(), function(item) {
-						if( item.category().toLowerCase() == userInput() ) {
+						if( item.category().toLowerCase() == userInput().toLowerCase() ) {
 							filteredPlaces.push(item);
+							item.marker().setMap(map);
+						} else {
+							item.marker().setMap(null);
 						}
 				});
 			} else {
 				self.filteredPlaces(listOfPlaces());
+				self.filteredPlaces().forEach(function(item) {
+					item.marker().setMap(map);
+				})
 			}
 	
 	});
@@ -57,10 +72,6 @@ function places() {
     		zoom: 13
   		});
 	}();
-
-	self.markers = ko.observableArray([]);
-
-	
 }
 
 ko.applyBindings(places());
