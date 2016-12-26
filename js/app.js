@@ -1,4 +1,12 @@
 var map;
+var mapSuccess = function() {
+	"use strict";
+		initMap();
+		loadFoursquarePlaces();
+}
+var mapError = function() {
+	$('#map').html("<h2>Oops. It seems there was a problem. Map couldn't be loading. </h2>")
+}
 
 function Place(name, lat, lng, category, rating) {
 	var marker;
@@ -21,7 +29,15 @@ function places() {
 	self.listOfPlaces = ko.observableArray([]);
 	self.filteredPlaces = ko.observableArray([]);
 
+	self.initMap = function() {
+		map = new google.maps.Map(document.getElementById('map'), { 
+    		center: {lat: 45.5016889, lng: -73.567256},
+    		zoom: 13
+  		});
+	};
+
 	self.loadFoursquarePlaces = function() {
+
 	  var clientSecret = "UKDBXCJSYFG0AL3MDBMGWHHJSMAIR3S5V5NZISHJQOIKOMEP",
 	  	  clientId = "KKTBRM0OM2QIUW5TVMRYK42XV2FIU1AAN5SZY4OMOJB504VU",
 	  	  city = "montreal",
@@ -32,17 +48,21 @@ function places() {
 	  			"&client_secret="+clientSecret+
 	  			"&near="+ city +
 	  			"&v=20161222"+
-	  			"&section="+typeOfQuery, function(data) {
+	  			"&section="+typeOfQuery
+	  			)
+	  			.done(function(data) {
 	  				var response = data.response.groups[0].items;
 	  					 response.forEach(function(element) {
 	  					 	self.listOfPlaces.push(
 	  					 		new Place(element.venue.name, element.venue.location.lat, 
 	  							element.venue.location.lng, element.venue.categories[0].pluralName, element.venue.rating)
 	  					 	);
-
-	  					})
-	  });
-	}();
+	  					});
+	  			})
+	  			.fail(function() {
+	  				$('.error-message').html("Oops… It seems there was a problem during the request. Data couldn't be loaded from Foursquare.");
+	  			})
+	};
 
 	self.userInput = ko.observable($('input').val());
 
@@ -63,15 +83,7 @@ function places() {
 					item.marker().setMap(map);
 				})
 			}
-	
 	});
-
-	self.initMap = function() {
-		map = new google.maps.Map(document.getElementById('map'), { 
-    		center: {lat: 45.5016889, lng: -73.567256},
-    		zoom: 13
-  		});
-	}();
 }
 
 ko.applyBindings(places());
