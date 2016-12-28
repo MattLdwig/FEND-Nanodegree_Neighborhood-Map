@@ -8,18 +8,18 @@ var mapError = function() {
 	$('#map').html("<h2>Oops. It seems there was a problem. Map couldn't be loading. </h2>")
 }
 
-function Place(name, lat, lng, category, rating) {
+function Place(data) {
 	var marker;
-	this.name = ko.observable(name);
-	this.lat = ko.observable(lat);
-	this.lng = ko.observable(lng);
-	this.category = ko.observable(category);
-	this.rating = ko.observable(rating);
+	this.name = data.venue.name;
+	this.lat = data.venue.location.lat;
+	this.lng = data.venue.location.lng;
+	this.category = data.venue.categories[0].pluralName;
+	this.rating = data.venue.rating;
 
 	marker = new google.maps.Marker ({
-	    position: new google.maps.LatLng(this.lat(), this.lng()),
+	    position: new google.maps.LatLng(this.lat, this.lng),
 	    map: map,
-	    title: this.name()
+	    title: this.name
   	});
 	this.marker = ko.observable(marker);
 }
@@ -52,10 +52,9 @@ function places() {
 	  			)
 	  			.done(function(data) {
 	  				var response = data.response.groups[0].items;
-	  					 response.forEach(function(element) {
+	  					 response.forEach(function(data) {
 	  					 	self.listOfPlaces.push(
-	  					 		new Place(element.venue.name, element.venue.location.lat, 
-	  							element.venue.location.lng, element.venue.categories[0].pluralName, element.venue.rating)
+	  					 		new Place(data)
 	  					 	);
 	  					});
 	  			})
