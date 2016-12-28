@@ -15,16 +15,11 @@ function Place(data) {
 	this.lng = data.venue.location.lng;
 	this.category = data.venue.categories[0].pluralName;
 	this.rating = data.venue.rating;
-
-	marker = new google.maps.Marker ({
-	    position: new google.maps.LatLng(this.lat, this.lng),
-	    map: map,
-	    title: this.name
-  	});
-	this.marker = ko.observable(marker);
+	this.marker = {};
 }
 
 function places() {
+	var marker;
 	var self = this;
 	self.listOfPlaces = ko.observableArray([]);
 	self.filteredPlaces = ko.observableArray([]);
@@ -56,6 +51,9 @@ function places() {
 	  					 	self.listOfPlaces.push(
 	  					 		new Place(data)
 	  					 	);
+	  					 	listOfPlaces.forEach(function(place){
+	  					 		setMarkerPlace(place)
+	  					 	});
 	  					});
 	  			})
 	  			.fail(function() {
@@ -69,20 +67,29 @@ function places() {
 		self.filteredPlaces([]);
 			if(userInput() !== ""){
 				return ko.utils.arrayFilter(self.listOfPlaces(), function(item) {
-						if( item.category().toLowerCase() == userInput().toLowerCase() ) {
+						if( item.category.toLowerCase() == userInput().toLowerCase() ) {
 							filteredPlaces.push(item);
-							item.marker().setMap(map);
+							item.marker.setMap(map);
 						} else {
-							item.marker().setMap(null);
+							item.marker.setMap(null);
 						}
 				});
 			} else {
 				self.filteredPlaces(listOfPlaces());
 				self.filteredPlaces().forEach(function(item) {
-					item.marker().setMap(map);
+					item.marker.setMap(map);
 				})
 			}
 	});
+
+	function setMarkerPlace(place) {
+		marker = new google.maps.Marker ({
+	    	position: new google.maps.LatLng(place.lat, place.lng),
+	   		map: map,
+	    	title: place.name
+  		});
+  		place.marker = marker;
+	}
 }
 
 ko.applyBindings(places());
