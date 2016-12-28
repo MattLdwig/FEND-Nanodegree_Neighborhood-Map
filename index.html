@@ -10,15 +10,15 @@
 <div class="row">
   <div class="col-md-3">
       <div class="sidebar">
-        <form data-bind="submit: filterPlace">
-          <input data-bind="value: userInput">
+        <form data-bind="">
+          <input data-bind="value: keyword">
         </form>
         <p class="error-message"></p>
-        <ul data-bind="foreach: filteredPlaces">
+        <ul data-bind="foreach: listOfPlaces">
           <li>
-            <span data-bind="text: category"></span>
-            <h3 data-bind="text: name"></h3>
-            <span data-bind="text: rating"></span>
+            <span data-bind=""></span>
+            <h3 data-bind=""></h3>
+            <span data-bind=""></span>
           </li>
         </ul>
       </div>
@@ -34,9 +34,9 @@
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
   crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  <script src="js/app.js"></script>
   <script 
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFZGqA1XbC777e1I20vYVmhBi0Cgv1cgg&callback=mapSuccess" onerror="mapError()" async defer>
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFZGqA1XbC777e1I20vYVmhBi0Cgv1cgg&libraries=places">
     </script>
+  <script src="js/app.js"></script>
 </body>
 </html>

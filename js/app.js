@@ -1,12 +1,4 @@
 var map;
-var mapSuccess = function() {
-	"use strict";
-		initMap();
-		loadFoursquarePlaces();
-}
-var mapError = function() {
-	$('#map').html("<h2>Oops. It seems there was a problem. Map couldn't be loading. </h2>")
-}
 
 function Place(data) {
 	var marker;
@@ -19,10 +11,17 @@ function Place(data) {
 }
 
 function places() {
-	var marker;
+	var marker,
+		placeLat,
+		placeLng,
+		service;
+	var defaultLocation = 'paris';
+
 	var self = this;
 	self.listOfPlaces = ko.observableArray([]);
 	self.filteredPlaces = ko.observableArray([]);
+	self.keyword = ko.observable('');
+	//self.place = ko.observable(defaultLocation);
 
 	self.initMap = function() {
 		map = new google.maps.Map(document.getElementById('map'), { 
@@ -31,19 +30,53 @@ function places() {
   		});
 	};
 
+	function getLocation(location) {
+
+		var request = {
+			query: location
+		};
+
+
+		service = new google.maps.places.PlacesService(map);
+		service.textSearch(request, callback);
+	}
+
+	function callback(results, status) {
+  		if (status == google.maps.places.PlacesServiceStatus.OK) {
+    		getPlacesInLocation(results[0]);
+  		}
+  		else {
+  			console.log(status);
+  		}
+	}
+
+	function getPlacesInLocation(place) {
+		console.log(place.location);
+		placeLat = place.geometry.location.lat();
+		placeLng = place.geometry.location.lng();
+
+		map.setCenter(new google.maps.LatLng(placeLat, placeLng));
+
+		loadFoursquarePlaces();
+	}
+
+	function initializeLocation(location) {
+		getPlacesInLocation(location)
+	};
+
+
 	self.loadFoursquarePlaces = function() {
 
 	  var clientSecret = "UKDBXCJSYFG0AL3MDBMGWHHJSMAIR3S5V5NZISHJQOIKOMEP",
 	  	  clientId = "KKTBRM0OM2QIUW5TVMRYK42XV2FIU1AAN5SZY4OMOJB504VU",
-	  	  city = "montreal",
 	  	  typeOfQuery = "outdoors"
 
 	  $.getJSON("https://api.foursquare.com/v2/venues/explore"+
 	  			"?client_id="+clientId+
 	  			"&client_secret="+clientSecret+
-	  			"&near="+ city +
+	  			"&query="+ self.keyword() +
 	  			"&v=20161222"+
-	  			"&section="+typeOfQuery
+	  			"&ll="+ placeLat + ',' + placeLng
 	  			)
 	  			.done(function(data) {
 	  				var response = data.response.groups[0].items;
@@ -63,24 +96,6 @@ function places() {
 
 	self.userInput = ko.observable($('input').val());
 
-	self.filterPlace = ko.computed(function() {
-		self.filteredPlaces([]);
-			if(userInput() !== ""){
-				return ko.utils.arrayFilter(self.listOfPlaces(), function(item) {
-						if( item.category.toLowerCase() == userInput().toLowerCase() ) {
-							filteredPlaces.push(item);
-							item.marker.setMap(map);
-						} else {
-							item.marker.setMap(null);
-						}
-				});
-			} else {
-				self.filteredPlaces(listOfPlaces());
-				self.filteredPlaces().forEach(function(item) {
-					item.marker.setMap(map);
-				})
-			}
-	});
 
 	function setMarkerPlace(place) {
 		marker = new google.maps.Marker ({
@@ -90,7 +105,11 @@ function places() {
   		});
   		place.marker = marker;
 	}
+	getLocation(defaultLocation);
+	//initializeLocation(defaultLocation);
 }
+
+
 
 ko.applyBindings(places());
 
