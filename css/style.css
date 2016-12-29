@@ -1,4 +1,4 @@
-#map {
-	width: 960px;
-	height: 600px;
+.sidebar {
+	overflow-y: scroll;
+	max-height: 100vh;
 }
