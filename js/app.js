@@ -30,11 +30,16 @@ function places() {
   		});
 	};
 
+	self.cityQuery = ko.observable($('.city').val());
+	var defaultCity = 'montreal';
+
 	self.loadFoursquarePlaces = function() {
+
+	self.listOfPlaces([]);
 
 	  var clientSecret = "UKDBXCJSYFG0AL3MDBMGWHHJSMAIR3S5V5NZISHJQOIKOMEP",
 	  	  clientId = "KKTBRM0OM2QIUW5TVMRYK42XV2FIU1AAN5SZY4OMOJB504VU",
-	  	  city = "montreal",
+	  	  city = (cityQuery() != "") ? cityQuery() : defaultCity,
 	  	  typeOfQuery = "outdoors"
 
 	  $.getJSON("https://api.foursquare.com/v2/venues/explore"+
@@ -54,6 +59,9 @@ function places() {
 	  					listOfPlaces().forEach(function(item){
 	  						placeMarker(item);
 	  					})
+
+	  					moveMapCenter(data.response.geocode.center.lat, data.response.geocode.center.lng);
+
 	  			})
 	  			.fail(function() {
 	  				$('.error-message').html("Oops… It seems there was a problem during the request. Data couldn't be loaded from Foursquare.");
@@ -76,6 +84,11 @@ function places() {
 				self.filteredPlaces(listOfPlaces());
 			}
 	});
+
+	function moveMapCenter(lat, lng) {
+		 var center = new google.maps.LatLng(lat, lng);
+		  map.panTo(center);
+	}
 
 
 	function placeMarker(places){
@@ -101,6 +114,7 @@ function places() {
     	});
 
 	}
+
 
 	function toggleBounce(marker) {  
   		if (marker.setAnimation() != null) {
