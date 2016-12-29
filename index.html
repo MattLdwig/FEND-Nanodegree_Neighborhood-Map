@@ -13,6 +13,9 @@
         <form data-bind="submit: filterPlace">
           <input data-bind="value: userInput">
         </form>
+         <form data-bind="submit: loadFoursquarePlaces">
+          <input class="city" data-bind="value: cityQuery">
+        </form>
         <p class="error-message"></p>
         <ul data-bind="foreach: filteredPlaces">
           <li>
