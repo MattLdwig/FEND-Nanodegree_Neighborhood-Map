@@ -19,9 +19,14 @@ function Place(data) {
 
 function places() {
 	var self = this;
+	var defaultCity = 'montreal';
+	var defaultQuery = 'best nearby'
 	self.listOfPlaces = ko.observableArray([]);
 	self.filteredPlaces = ko.observableArray([]);
 	self.markers = ko.observableArray([]);
+	self.cityQuery = ko.observable($('.city').val());
+	self.keywordQuery = ko.observable($('.query').val());
+	self.filter = ko.observable('');
 	
 	self.initMap = function() {
 		var style = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#e9e9e9"},{"lightness":17}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":20}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffffff"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#ffffff"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":16}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":21}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#dedede"},{"lightness":21}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#ffffff"},{"lightness":16}]},{"elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#333333"},{"lightness":40}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#f2f2f2"},{"lightness":19}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#fefefe"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#fefefe"},{"lightness":17},{"weight":1.2}]}];
@@ -34,60 +39,30 @@ function places() {
   		$('#map').height($(window).height());
 	};
 
-	self.cityQuery = ko.observable($('.city').val());
-	var defaultCity = 'montreal';
-
-	self.loadFoursquarePlaces = function() {
-
-	self.listOfPlaces([]);
-
-	  var clientSecret = "UKDBXCJSYFG0AL3MDBMGWHHJSMAIR3S5V5NZISHJQOIKOMEP",
-	  	  clientId = "KKTBRM0OM2QIUW5TVMRYK42XV2FIU1AAN5SZY4OMOJB504VU",
-	  	  city = (cityQuery() != "") ? cityQuery() : defaultCity,
-	  	  typeOfQuery = "outdoors"
-
-	  $.getJSON("https://api.foursquare.com/v2/venues/explore"+
-	  			"?client_id="+clientId+
-	  			"&client_secret="+clientSecret+
-	  			"&near="+ city +
-	  			"&v=20161222"+
-	  			"&section="+typeOfQuery
-	  			)
-	  			.done(function(data) {
-	  				var response = data.response.groups[0].items;
-	  					 response.forEach(function(data) {
-	  					 	self.listOfPlaces.push(
-	  					 		new Place(data)
-	  					 	);
-	  					});
-	  					listOfPlaces().forEach(function(item){
-	  						placeMarker(item);
-	  					})
-
-	  					moveMapCenter(data.response.geocode.center.lat, data.response.geocode.center.lng);
-
-	  			})
-	  			.fail(function() {
-	  				$('.error-message').html("Oops… It seems there was a problem during the request. Data couldn't be loaded from Foursquare.");
-	  			})
-	};
-
-	self.userInput = ko.observable($('input').val());
 
 	self.filterPlace = ko.computed(function() {
+
 		self.filteredPlaces([]);
-			if(userInput() !== ""){
-				return ko.utils.arrayFilter(self.listOfPlaces(), function(item) {
-						if( item.category.toLowerCase() == userInput().toLowerCase() ) {
-							filteredPlaces.push(item);
-						} else {
-							item.marker.setMap(null);
-						}
-				});
-			} else {
-				self.filteredPlaces(listOfPlaces());
-			}
+
+		var regexp = new RegExp(self.filter(), 'i');
+
+		self.listOfPlaces().forEach(function(place){
+
+		if(!place.marker) {
+			placeMarker(place);
+		}
+		if (place.category.search(regexp) !== -1) {
+            filteredPlaces.push(place);
+            place.marker.setVisible(true);
+            } else {
+            place.marker.setVisible(false);
+            }
+		});
+
+		return filteredPlaces();
 	});
+
+			
 
 	function moveMapCenter(lat, lng) {
 		 var center = new google.maps.LatLng(lat, lng);
@@ -103,6 +78,7 @@ function places() {
 	    	map: map,
 	    	icon: 'assets/marker_dark_blue.png',
 	    	title: places.name,
+	    	visible: true,
 	    	animation: google.maps.Animation.DROP
   		});
 		places.marker = marker;
@@ -131,6 +107,37 @@ function places() {
     		}, 2000);
   		}
 	}
+
+	self.loadFoursquarePlaces = function() {
+
+	self.listOfPlaces([]);
+
+	  var clientSecret = "UKDBXCJSYFG0AL3MDBMGWHHJSMAIR3S5V5NZISHJQOIKOMEP",
+	  	  clientId = "KKTBRM0OM2QIUW5TVMRYK42XV2FIU1AAN5SZY4OMOJB504VU",
+	  	  city = (cityQuery() != "") ? cityQuery() : defaultCity,
+	  	  query = defaultQuery
+
+	  $.getJSON("https://api.foursquare.com/v2/venues/explore"+
+	  			"?client_id="+clientId+
+	  			"&client_secret="+clientSecret+
+	  			"&near="+ city +
+	  			"&v=20161222"+
+	  			"&query="+ query
+	  			)
+	  			.done(function(data) {
+	  				var response = data.response.groups[0].items;
+	  					 response.forEach(function(data) {
+	  					 	self.listOfPlaces.push(
+	  					 		new Place(data)
+	  					 	);
+	  					});
+	  					moveMapCenter(data.response.geocode.center.lat, data.response.geocode.center.lng);
+
+	  			})
+	  			.fail(function() {
+	  				$('.error-message').html("Oops… It seems there was a problem during the request. Data couldn't be loaded from Foursquare.");
+	  			})
+	};
 
 }
 

@@ -2,3 +2,7 @@
 	overflow-y: scroll;
 	max-height: 100vh;
 }
+
+#map {
+	width: 100%;
+}

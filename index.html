@@ -10,8 +10,8 @@
 <div class="row">
   <div class="col-md-3">
       <div class="sidebar">
-        <form data-bind="submit: filterPlace">
-          <input data-bind="value: userInput">
+        <form class="form-inline" data-bind="submit: filterPlace">
+          <input class="query" data-bind="textInput: filter">
         </form>
          <form data-bind="submit: loadFoursquarePlaces">
           <input class="city" data-bind="value: cityQuery">
