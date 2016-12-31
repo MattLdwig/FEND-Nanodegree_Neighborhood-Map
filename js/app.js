@@ -15,6 +15,18 @@ function Place(data) {
 	this.lng = data.venue.location.lng;
 	this.category = data.venue.categories[0].pluralName;
 	this.rating = data.venue.rating;
+	this.address = data.venue.location.formattedAddress;
+	this.phone = this.getPhone(data);
+	this.url = this.getUrl(data);
+}
+
+Place.prototype = {
+	getUrl: function (data) {
+		return data.venue.url ? data.venue.url : 'Website not available';
+	},
+	getPhone: function(data) {
+		return data.venue.contact.formattedPhone ? data.venue.contact.formattedPhone : 'Contact not available';
+	}
 }
 
 function places() {
@@ -24,12 +36,26 @@ function places() {
 	self.listOfPlaces = ko.observableArray([]);
 	self.filteredPlaces = ko.observableArray([]);
 	self.markers = ko.observableArray([]);
-	self.cityQuery = ko.observable($('.city').val());
-	self.keywordQuery = ko.observable($('.query').val());
+	self.cityQuery = ko.observable('');
 	self.filter = ko.observable('');
+	self.selectedMarker = ko.observable();
 	
 	self.initMap = function() {
-		var style = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#e9e9e9"},{"lightness":17}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":20}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffffff"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#ffffff"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":16}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":21}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#dedede"},{"lightness":21}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#ffffff"},{"lightness":16}]},{"elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#333333"},{"lightness":40}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#f2f2f2"},{"lightness":19}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#fefefe"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#fefefe"},{"lightness":17},{"weight":1.2}]}];
+		
+		var style = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#e9e9e9"},{"lightness":17}]},
+					{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":20}]},
+					{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffffff"},{"lightness":17}]},
+					{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#ffffff"},{"lightness":29},{"weight":0.2}]},
+					{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":18}]},
+					{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":16}]},
+					{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":21}]},
+					{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#dedede"},{"lightness":21}]},
+					{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#ffffff"},{"lightness":16}]},
+					{"elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#333333"},{"lightness":40}]},
+					{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#f2f2f2"},
+					{"lightness":19}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#fefefe"},{"lightness":20}]},
+					{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#fefefe"},{"lightness":17},{"weight":1.2}]}];
+
 		map = new google.maps.Map(document.getElementById('map'), { 
     		center: {lat: 45.5016889, lng: -73.567256},
     		styles: style,
@@ -48,19 +74,30 @@ function places() {
 
 		self.listOfPlaces().forEach(function(place){
 
-		if(!place.marker) {
-			placeMarker(place);
-		}
-		if (place.category.search(regexp) !== -1) {
-            filteredPlaces.push(place);
-            place.marker.setVisible(true);
-            } else {
-            place.marker.setVisible(false);
-            }
+			if(!place.marker) {
+				placeMarker(place);
+			}
+			if ((place.category.search(regexp) !== -1) || 
+				place.name.search(regexp) !== -1)  {
+
+	            filteredPlaces.push(place);
+	            place.marker.setVisible(true);
+
+	        } 
+	        else {
+	            place.marker.setVisible(false);
+	        }
+
 		});
 
 		return filteredPlaces();
 	});
+
+	self.animateMarker = function(place) {
+		self.selectedMarker(place.marker);
+		toggleBounce(place.marker);
+		moveMapCenter(place.lat, place.lng);
+	}
 
 			
 
@@ -72,6 +109,34 @@ function places() {
 
 	function placeMarker(places){
 		var marker;
+		var formattedUrl = function (){
+			if (places.url !== 'Website not available'){
+				return "<div class='urlContainer'>"
+						+ "<a href='"+places.url+"'class='infoWindowurl'>"
+						+ places.url + "</a> </div>"
+			}
+			else {
+				return "<div class='urlContainer'>"
+						+ "<span class='infowindowUrl'>"
+						+ places.url + "</span> </div>"
+			}
+		}
+
+		var infoWindowContent = "<div class='infoWindowContainer'>"
+								+ "<div class='nameContainer'>"
+								+ "<h3 class='infoWindowName'>"
+								+ places.name + "</h3> </div> "
+								+ "<div class='categoryContainer'>"
+								+ "<span class='infoWindowCategory'>"
+								+ places.category + "</span> </div>"
+								+ "<div class='addressContainer'>"
+								+ "<span class='infoWindowAddress'>"
+								+ places.address + "</span> </div>"
+								+ "<div class='contactContainer'>"
+								+ "<span class='infoWindowPhone'>"
+								+ places.phone + "</span> </div>"
+								+ formattedUrl();
+								+ "</div>";
 
 		marker = new google.maps.Marker ({
 	    	position: new google.maps.LatLng(places.lat, places.lng),
@@ -84,7 +149,7 @@ function places() {
 		places.marker = marker;
 
 		var infoWindow = new google.maps.InfoWindow({
-      		content: places.name
+      		content: infoWindowContent
     	});
 
     	marker.infowindow = infoWindow;
@@ -127,6 +192,7 @@ function places() {
 	  			.done(function(data) {
 	  				var response = data.response.groups[0].items;
 	  					 response.forEach(function(data) {
+	  					 	console.log(response);
 	  					 	self.listOfPlaces.push(
 	  					 		new Place(data)
 	  					 	);
