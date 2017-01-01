@@ -59,7 +59,7 @@ function places() {
 		map = new google.maps.Map(document.getElementById('map'), { 
     		center: {lat: 45.5016889, lng: -73.567256},
     		styles: style,
-    		zoom: 13
+    		zoom: 16
   		});
 
   		$('#map').height($(window).height());
@@ -76,6 +76,7 @@ function places() {
 
 			if(!place.marker) {
 				placeMarker(place);
+				markers.push(place.marker);
 			}
 			if ((place.category.search(regexp) !== -1) || 
 				place.name.search(regexp) !== -1)  {
@@ -97,6 +98,12 @@ function places() {
 		self.selectedMarker(place.marker);
 		toggleBounce(place.marker);
 		moveMapCenter(place.lat, place.lng);
+		map.setZoom(16);
+		for (var i = 0 ; i < markers().length; i++) {
+			markers()[i].infowindow.close();
+		}
+
+		place.marker.infowindow.open(map,place.marker);
 	}
 
 			
@@ -109,6 +116,26 @@ function places() {
 
 	function placeMarker(places){
 		var marker;
+		
+
+		marker = new google.maps.Marker ({
+	    	position: new google.maps.LatLng(places.lat, places.lng),
+	    	map: map,
+	    	icon: 'assets/marker_dark_blue.png',
+	    	title: places.name,
+	    	visible: true,
+	    	animation: google.maps.Animation.DROP
+  		});
+		places.marker = marker;
+
+		infoWindow(places, marker);
+
+
+	}
+
+
+	function infoWindow(places,marker) {
+
 		var formattedUrl = function (){
 			if (places.url !== 'Website not available'){
 				return "<div class='urlContainer'>"
@@ -138,16 +165,6 @@ function places() {
 								+ formattedUrl();
 								+ "</div>";
 
-		marker = new google.maps.Marker ({
-	    	position: new google.maps.LatLng(places.lat, places.lng),
-	    	map: map,
-	    	icon: 'assets/marker_dark_blue.png',
-	    	title: places.name,
-	    	visible: true,
-	    	animation: google.maps.Animation.DROP
-  		});
-		places.marker = marker;
-
 		var infoWindow = new google.maps.InfoWindow({
       		content: infoWindowContent
     	});
@@ -155,10 +172,13 @@ function places() {
     	marker.infowindow = infoWindow;
 
 		google.maps.event.addListener(marker, 'click', function() {
+			for (var i = 0 ; i < markers().length; i++) {
+			markers()[i].infowindow.close();
+		}
       		toggleBounce(marker);
+      		map.setZoom(16);
       		infoWindow.open(map, marker);
     	});
-
 	}
 
 
@@ -192,7 +212,6 @@ function places() {
 	  			.done(function(data) {
 	  				var response = data.response.groups[0].items;
 	  					 response.forEach(function(data) {
-	  					 	console.log(response);
 	  					 	self.listOfPlaces.push(
 	  					 		new Place(data)
 	  					 	);

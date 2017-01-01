@@ -6,3 +6,13 @@
 #map {
 	width: 100%;
 }
+
+.filtered-places {
+	list-style: none;
+	-webkit-margin-before: 0;
+	-webkit-padding-start: 0;
+}
+
+ul li:nth-child(odd) {
+	background: #fafafa;
+}
