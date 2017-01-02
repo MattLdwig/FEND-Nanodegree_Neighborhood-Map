@@ -59,6 +59,7 @@ function places() {
 		map = new google.maps.Map(document.getElementById('map'), { 
     		center: {lat: 45.5016889, lng: -73.567256},
     		styles: style,
+    		disableDefaultUI: true,
     		zoom: 16
   		});
 
@@ -226,5 +227,8 @@ function places() {
 
 }
 
+
 ko.applyBindings(places());
+
+
 

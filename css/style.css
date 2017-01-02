@@ -16,3 +16,40 @@
 ul li:nth-child(odd) {
 	background: #fafafa;
 }
+
+li {
+	padding: 1.5% 5%;
+}
+
+.wrapper {
+	display: flex;
+	min-height: 100%;
+}
+
+.navbar-toggle span {
+	background: #333;
+}
+
+.navmenu, .navbar-offcanva {
+	width: 25%;
+	background: #fff;
+}
+
+@media (max-width: 1099px){
+
+	.offcanvas-md.in {
+		width: 90%;
+	}
+
+	.navbar-toggle {
+		display: block;
+		position: fixed;
+		top: 0;
+		right: 0;
+		z-index: 1;
+	}
+
+}
+
+
+
