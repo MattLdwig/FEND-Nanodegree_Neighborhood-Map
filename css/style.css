@@ -13,7 +13,7 @@
 	-webkit-padding-start: 0;
 }
 
-ul li:nth-child(odd) {
+ul li:nth-child(even) {
 	background: #fafafa;
 }
 
@@ -26,8 +26,23 @@ li {
 	min-height: 100%;
 }
 
+
+.forms-container {
+	display: flex;
+	justify-content: center;
+	padding-top: 20px;
+}
+
 .navbar-toggle span {
 	background: #333;
+}
+
+.navbar-toggle .icon-bar {
+	width: 50px;
+	height: 8px;
+}
+.navbar-toggle .icon-bar+.icon-bar {
+	margin-top: 8px;
 }
 
 .navmenu, .navbar-offcanva {
@@ -35,7 +50,22 @@ li {
 	background: #fff;
 }
 
+.gm-style .gm-style-iw {
+	font-size: 30px;
+}
+
+.city, .query {
+	font-size: 18px;
+	width: 150px;
+	height: 20px;
+	border: none;
+}
+
 @media (max-width: 1099px){
+
+	body {
+		font-size: 20px;
+	}
 
 	.offcanvas-md.in {
 		width: 90%;
@@ -49,7 +79,35 @@ li {
 		z-index: 1;
 	}
 
+	.forms-container {
+		flex-direction: column;
+		background: #fafafa
+	}
+
+	.forms-container form {
+		display: flex;
+		justify-content: center;
+	}
+
+	.city, .query {
+		padding: 30px;
+		width: 80%;
+		font-size: 20px;
+	}
+
 }
 
+
+@media (max-width: 765px) {
+
+	.forms-container {
+		flex-direction: column;
+	}
+
+	.city, .query {
+		padding: 10px 20px 10px 34px;
+		width: 100%;
+	}
+}
 
 

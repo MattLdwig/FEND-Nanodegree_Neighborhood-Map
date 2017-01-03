@@ -60,7 +60,7 @@ function places() {
     		center: {lat: 45.5016889, lng: -73.567256},
     		styles: style,
     		disableDefaultUI: true,
-    		zoom: 16
+    		zoom: 12
   		});
 
   		$('#map').height($(window).height());
@@ -177,7 +177,7 @@ function places() {
 			markers()[i].infowindow.close();
 		}
       		toggleBounce(marker);
-      		map.setZoom(16);
+      		map.setZoom(14);
       		infoWindow.open(map, marker);
     	});
 	}
