@@ -11,11 +11,11 @@
   <nav class="navmenu navmenu-fixed-left offcanvas-md" id="js-bootstrap-offcanvas">
     <div class="sidebar">
        <div class="forms-container">
-      <form>
+      <form class="form-filter">
       <input class="query" data-bind="textInput: filter" placeholder="Filter">
     </form>
-    <form data-bind="submit: loadFoursquarePlaces">
-      <input class="city" data-bind="textInput: cityQuery" placeholder="Montréal, CA">
+    <form class="form-city" data-bind="submit: loadFoursquarePlaces">
+      <input class="city" data-bind="textInput: cityQuery" placeholder="City">
     </form>
     </div>
         <p class="error-message"></p>

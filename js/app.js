@@ -62,7 +62,9 @@ function places() {
     		disableDefaultUI: true,
     		zoom: 12
   		});
-
+		if($(window).width() > 1099){
+			$('#map').width($(window).width() - $('.sidebar').width());
+		}
   		$('#map').height($(window).height());
 	};
 

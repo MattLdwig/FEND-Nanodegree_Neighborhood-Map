@@ -5,6 +5,7 @@
 
 #map {
 	width: 100%;
+	float: right;
 }
 
 .filtered-places {
@@ -29,12 +30,20 @@ li {
 
 .forms-container {
 	display: flex;
+	background: #fafafa;
 	justify-content: center;
+	flex-direction: column;
 	padding-top: 20px;
 }
 
+.form-filter, .form-city {
+	display: flex;
+	justify-content: center;
+}
+
+
 .navbar-toggle span {
-	background: #333;
+	background: #3b4153;
 }
 
 .navbar-toggle .icon-bar {
@@ -50,18 +59,16 @@ li {
 	background: #fff;
 }
 
-.gm-style .gm-style-iw {
-	font-size: 30px;
-}
 
 .city, .query {
-	font-size: 18px;
-	width: 150px;
 	height: 20px;
 	border: none;
+	padding: 25px;
+	width: 80%;
+	font-size: 20px;
 }
 
-@media (max-width: 1099px){
+@media (max-width: 1199px){
 
 	body {
 		font-size: 20px;
@@ -81,19 +88,12 @@ li {
 
 	.forms-container {
 		flex-direction: column;
-		background: #fafafa
+		
 	}
 
-	.forms-container form {
-		display: flex;
-		justify-content: center;
-	}
-
-	.city, .query {
-		padding: 30px;
-		width: 80%;
-		font-size: 20px;
-	}
+	.gm-style .gm-style-iw {
+	font-size: 30px;
+}
 
 }
 
