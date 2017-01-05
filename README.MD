@@ -24,12 +24,12 @@ User can search for a new location using the associated input.
 
 ### Documentation
 
-[Knockout.JS tutorial on tutsplus, extracted from the ebook below](https://code.tutsplus.com/tutorials/hello-knockout--net-31289)
-[Free Ebook on knockout.JS](https://www.syncfusion.com/resources/techportal/ebooks/knockoutjs?utm_medium=BizDev-TutsPlus0313)
-[Knockout.JS doc](http://knockoutjs.com/documentation/introduction.html)
-[Foursquare API](https://developer.foursquare.com/)
-[Google Maps API](https://developers.google.com/maps/documentation/javascript/tutorial)
-[Udacity's FEND nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001)
+[Knockout.JS tutorial on tutsplus, extracted from the ebook below](https://code.tutsplus.com/tutorials/hello-knockout--net-31289)  
+[Free Ebook on knockout.JS](https://www.syncfusion.com/resources/techportal/ebooks/knockoutjs?utm_medium=BizDev-TutsPlus0313)  
+[Knockout.JS doc](http://knockoutjs.com/documentation/introduction.html)  
+[Foursquare API](https://developer.foursquare.com/)  
+[Google Maps API](https://developers.google.com/maps/documentation/javascript/tutorial)  
+[Udacity's FEND nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001)  
 
 ### License
 
