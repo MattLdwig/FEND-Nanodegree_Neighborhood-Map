@@ -368,12 +368,12 @@ function places() {
    * @param {object} marker to animate.
    */
   function toggleBounce(marker) {
-    if (marker.getAnimation() !== null) {
+    if (marker.setAnimation() != null) {
       marker.setAnimation(null);
     } else {
-      marker.getAnimation(google.maps.Animation.BOUNCE);
+      marker.setAnimation(google.maps.Animation.BOUNCE);
       setTimeout(function() {
-        marker.getAnimation(null);
+        marker.setAnimation(null);
       }, 2100);
     }
   }
