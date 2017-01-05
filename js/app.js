@@ -368,7 +368,7 @@ function places() {
    * @param {object} marker to animate.
    */
   function toggleBounce(marker) {
-    if (marker.setAnimation() != null) {
+    if (marker.getAnimation() != null) {
       marker.setAnimation(null);
     } else {
       marker.setAnimation(google.maps.Animation.BOUNCE);
