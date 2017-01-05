@@ -1,9 +1,9 @@
 var map;
 /**
 * @function Google Map API Callback
-* @description 
+* @description Map initialization and Data loading
 */
-var mapSuccess = function() {
+function mapSuccess() {
   "use strict";
   initMap();
   loadFoursquarePlaces();
@@ -11,16 +11,16 @@ var mapSuccess = function() {
 
 /**
 * @function Google Map API Callback
-* @description 
+* @description Displays an error message if a problem occurs when calling the Google Maps API.
 */
-var mapError = function() {
+function mapError() {
   $('#map').html("<h2>Oops. It seems there was a problem. Map couldn't be loading. </h2>");
 };
 
 /**
-* @class Create the place class
-* @description 
-* @param 
+* @class Create the Place Class
+* @description Format Foursquare Data
+* @param {object} Foursquare data
 */
 function Place(data) {
 
@@ -28,24 +28,29 @@ function Place(data) {
   this.lat = data.venue.location.lat;
   this.lng = data.venue.location.lng;
   this.category = data.venue.categories[0].pluralName;
-  this.rating = data.venue.rating;
   this.address = data.venue.location.formattedAddress;
   this.phone = this.getPhone(data);
   this.url = this.getUrl(data);
 }
 
 /**
-* @function Add additionnal property to place
-* @description 
+* @function Update Place's prototype
+* @description Return the url if present or a message if it doesn't.
+* @param {object} Foursquare data
 */
-Place.prototype = {
-  getUrl: function(data) {
+Place.prototype.getUrl = function(data) {
     return data.venue.url ? data.venue.url : 'Website not available';
-  },
-  getPhone: function(data) {
-    return data.venue.contact.formattedPhone ? data.venue.contact.formattedPhone : 'Contact not available';
-  }
 };
+
+/**
+* @function Update Place's prototype
+* @description Return the phone if present or a message if it doesn't.
+* @param {object} Foursquare data
+*/
+Place.prototype.getPhone = function(data) {
+return data.venue.contact.formattedPhone ? data.venue.contact.formattedPhone : 'Contact not available';
+};
+
 
 /**
 * @function Knockout ViewModel
@@ -62,7 +67,8 @@ function places() {
 
   /**
   * @function Google Map Initialization
-  * @description 
+  * @description Create the map and center it on Montréal, CA.
+  * Style Map from: https://snazzymaps.com/style/151/ultra-light-with-labels
   */
   self.initMap = function() {
 
@@ -214,6 +220,10 @@ function places() {
     $('#map').height($(window).height());
   };
 
+  if($(window).width() < 1099) {
+    $('li').attr('data-target', '#js-bootstrap-offcanvas');
+  }
+
   /**
   * @function filter
   * @description Empty filteredPlaces,
@@ -255,12 +265,17 @@ function places() {
 
   /**
   * @function Animate Marker
-  * @description 
+  * @description When the user click on a place in the list : 
+  * Animates the corresponding marker,
+  * Set the map center to the place coordinates and zoom.
+  * Close all infowindows and open the one corresponding to the place. 
+  * @param {object} clicked place in the list 
   */
   self.animateMarker = function(place) {
     toggleBounce(place.marker);
     moveMapCenter(place.lat, place.lng);
     map.setZoom(16);
+
     for (var i = 0; i < markers().length; i++) {
       markers()[i].infowindow.close();
     }
@@ -269,8 +284,9 @@ function places() {
   };
 
   /**
-  * @function Move the Google Map Center
-  * @description 
+  * @function Set the Google Map Center
+  * @param {number} latitude coordinates
+  * @param {number} longitude coordinates
   */
   function moveMapCenter(lat, lng) {
     var center = new google.maps.LatLng(lat, lng);
@@ -278,57 +294,60 @@ function places() {
   }
 
   /**
-  * @function Place the places markers on the map
-  * @description 
+  * @function Set the places markers
+  * @description Create a new marker, set this marker to a new place's property 
+  * @param {object} place from listOfPlaces observableArray
   */
-  function placeMarker(places) {
+  function placeMarker(place) {
     var marker;
-
     marker = new google.maps.Marker({
-      position: new google.maps.LatLng(places.lat, places.lng),
+      position: new google.maps.LatLng(place.lat, place.lng),
       map: map,
       icon: 'assets/marker_dark_blue.png',
-      title: places.name,
+      title: place.name,
       visible: true,
       animation: google.maps.Animation.DROP
     });
-    places.marker = marker;
+    place.marker = marker;
 
-    infoWindow(places, marker);
+    infoWindow(place, marker);
 
   }
 
   /**
-  * @function Set the infowindow to the place marker
-  * @description 
+  * @function Set infowindow to the place's marker
+  * @description Create infowindow, format and set content.
+  * Add a click event listener to the place's marker.
+  * @param {object} place from listOfPlaces observableArray
+  * @param {object} marker property 
   */
-  function infoWindow(places, marker) {
+  function infoWindow(place, marker) {
 
     var formattedUrl = function() {
-      if (places.url !== 'Website not available') {
+      if (place.url !== 'Website not available') {
         return "<div class='urlContainer'>" +
-          "<a href='" + places.url + "'class='infoWindowurl'>" +
-          places.url + "</a> </div>"
+          "<a href='" + place.url + "'class='infoWindowurl'>" +
+          place.url + "</a> </div>"
       } else {
         return "<div class='urlContainer'>" +
           "<span class='infowindowUrl'>" +
-          places.url + "</span> </div>"
+          place.url + "</span> </div>"
       }
     }
 
     var infoWindowContent = "<div class='infoWindowContainer'>" +
       "<div class='nameContainer'>" +
       "<h3 class='infoWindowName'>" +
-      places.name + "</h3> </div> " +
+      place.name + "</h3> </div> " +
       "<div class='categoryContainer'>" +
       "<span class='infoWindowCategory'>" +
-      places.category + "</span> </div>" +
+      place.category + "</span> </div>" +
       "<div class='addressContainer'>" +
       "<span class='infoWindowAddress'>" +
-      places.address + "</span> </div>" +
+      place.address + "</span> </div>" +
       "<div class='contactContainer'>" +
       "<span class='infoWindowPhone'>" +
-      places.phone + "</span> </div>" +
+      place.phone + "</span> </div>" +
       formattedUrl(); +
     "</div>";
 
@@ -349,8 +368,9 @@ function places() {
   }
 
   /**
-  * @function Toggle Bounce
-  * @description 
+  * @function Marker Bounce Animation
+  * @description from https://developers.google.com/maps/documentation/javascript/examples/marker-animations
+  * @param {object} marker to animate.
   */
   function toggleBounce(marker) {
     if (marker.setAnimation() !== null) {
@@ -365,7 +385,11 @@ function places() {
 
   /**
   * @function Call the Foursquare API
-  * @description 
+  * @description Empty the listOfPlaces observableArray.
+  * If a cityQuery is not empty, use it as place parameter for the jSON query. Else use the defaultCity variable.
+  * If successful, create a new object Place with the each place received and push them in the listOfPlaces observableArray.
+  * Call the method moveMapCenter with the new coordinates.
+  * If the loadinG fail, display an error message on the sidebar.
   */
   self.loadFoursquarePlaces = function() {
 

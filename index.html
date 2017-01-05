@@ -20,7 +20,7 @@
     </div>
         <p class="error-message"></p>
         <ul class="filtered-places" data-bind="foreach: filteredPlaces">
-          <li data-bind="click: animateMarker" data-toggle="offcanvas" data-target="#js-bootstrap-offcanvas">
+          <li data-bind="click: animateMarker" data-toggle="offcanvas">
             <h3 data-bind="text: name"></h3>
             <span data-bind="text: category"></span>
             <span data-bind="if: url !== 'Website not available'">
@@ -63,5 +63,10 @@
   <script 
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFZGqA1XbC777e1I20vYVmhBi0Cgv1cgg&callback=mapSuccess" onerror="mapError()" async defer>
     </script>
+  <script>
+  if($(window).width() < 1099) {
+    $('li').attr('data-target', '#js-bootstrap-offcanvas');
+  }
+  </script>
 </body>
 </html>
