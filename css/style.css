@@ -1,113 +1,100 @@
-.sidebar {
-	overflow-y: scroll;
-	max-height: 100vh;
-}
+/* ==========================================================================
+   Map
+   ========================================================================== */
 
 #map {
-	width: 100%;
-	float: right;
+    width: 100%;
+    float: right;
 }
+/* ==========================================================================
+   Navigation Bar (Sidebar)
+   ========================================================================== */
 
-.filtered-places {
-	list-style: none;
-	-webkit-margin-before: 0;
-	-webkit-padding-start: 0;
+.sidebar {
+    overflow-y: scroll;
+    max-height: 100vh;
 }
-
-ul li:nth-child(even) {
-	background: #fafafa;
+.navmenu,
+.navbar-offcanvas {
+    width: 25%;
+    background: #fff;
 }
-
-li {
-	padding: 1.5% 5%;
-}
-
-.wrapper {
-	display: flex;
-	min-height: 100%;
-}
-
+/* Forms
+   ========================================================================== */
 
 .forms-container {
-	display: flex;
-	background: #fafafa;
-	justify-content: center;
-	flex-direction: column;
-	padding-top: 20px;
+    display: flex;
+    background: #fafafa;
+    justify-content: center;
+    flex-direction: column;
+    padding-top: 20px;
 }
-
-.form-filter, .form-city {
-	display: flex;
-	justify-content: center;
+.form-filter,
+.form-city {
+    display: flex;
+    justify-content: center;
 }
+.city,
+.query {
+    height: 20px;
+    border: none;
+    padding: 25px;
+    width: 80%;
+    font-size: 20px;
+}
+/* List
+   ========================================================================== */
 
+.filtered-places {
+    list-style: none;
+    -webkit-margin-before: 0;
+    -webkit-padding-start: 0;
+}
+ul li:nth-child(even) {
+    background: #fafafa;
+}
+li {
+    padding: 1.5% 5%;
+}
+/* Hamburger Menu
+   ========================================================================== */
 
 .navbar-toggle span {
-	background: #3b4153;
+    background: #3b4153;
 }
-
 .navbar-toggle .icon-bar {
-	width: 50px;
-	height: 8px;
+    width: 50px;
+    height: 8px;
 }
 .navbar-toggle .icon-bar+.icon-bar {
-	margin-top: 8px;
+    margin-top: 8px;
 }
+/* ==========================================================================
+   Media Queries
+   ========================================================================== */
 
-.navmenu, .navbar-offcanva {
-	width: 25%;
-	background: #fff;
+@media (max-width: 1199px) {
+    body {
+        font-size: 20px;
+    }
+    .offcanvas-md.in {
+        width: 90%;
+    }
+    .navbar-toggle {
+        display: block;
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 1;
+    }
+    .gm-style .gm-style-iw {
+        font-size: 30px;
+    }
 }
-
-
-.city, .query {
-	height: 20px;
-	border: none;
-	padding: 25px;
-	width: 80%;
-	font-size: 20px;
-}
-
-@media (max-width: 1199px){
-
-	body {
-		font-size: 20px;
-	}
-
-	.offcanvas-md.in {
-		width: 90%;
-	}
-
-	.navbar-toggle {
-		display: block;
-		position: fixed;
-		top: 0;
-		right: 0;
-		z-index: 1;
-	}
-
-	.forms-container {
-		flex-direction: column;
-		
-	}
-
-	.gm-style .gm-style-iw {
-	font-size: 30px;
-}
-
-}
-
-
 @media (max-width: 765px) {
-
-	.forms-container {
-		flex-direction: column;
-	}
-
-	.city, .query {
-		padding: 10px 20px 10px 34px;
-		width: 100%;
-	}
+    .city,
+    .query {
+        padding: 10px 20px 10px 34px;
+        width: 100%;
+    }
 }
-
-

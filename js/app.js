@@ -1,27 +1,27 @@
 var map;
 /**
-* @function Google Map API Callback
-* @description Map initialization and Data loading
-*/
+ * @function Google Map API Callback
+ * @description Map initialization and Data loading
+ */
 function mapSuccess() {
   "use strict";
   initMap();
   loadFoursquarePlaces();
-};
+}
 
 /**
-* @function Google Map API Callback
-* @description Displays an error message if a problem occurs when calling the Google Maps API.
-*/
+ * @function Google Map API Callback
+ * @description Displays an error message if a problem occurs when calling the Google Maps API.
+ */
 function mapError() {
   $('#map').html("<h2>Oops. It seems there was a problem. Map couldn't be loading. </h2>");
-};
+}
 
 /**
-* @class Create the Place Class
-* @description Format Foursquare Data
-* @param {object} Foursquare data
-*/
+ * @class Create the Place Class
+ * @description Format Foursquare Data
+ * @param {object} Foursquare data
+ */
 function Place(data) {
 
   this.name = data.venue.name;
@@ -34,31 +34,30 @@ function Place(data) {
 }
 
 /**
-* @function Update Place's prototype
-* @description Return the url if present or a message if it doesn't.
-* @param {object} Foursquare data
-*/
+ * @function Update Place's prototype
+ * @description Return the url if present or a message if it doesn't.
+ * @param {object} Foursquare data
+ */
 Place.prototype.getUrl = function(data) {
-    return data.venue.url ? data.venue.url : 'Website not available';
+  return data.venue.url ? data.venue.url : 'Website not available';
 };
 
 /**
-* @function Update Place's prototype
-* @description Return the phone if present or a message if it doesn't.
-* @param {object} Foursquare data
-*/
+ * @function Update Place's prototype
+ * @description Return the phone if present or a message if it doesn't.
+ * @param {object} Foursquare data
+ */
 Place.prototype.getPhone = function(data) {
-return data.venue.contact.formattedPhone ? data.venue.contact.formattedPhone : 'Contact not available';
+  return data.venue.contact.formattedPhone ? data.venue.contact.formattedPhone : 'Contact not available';
 };
 
-
 /**
-* @function Knockout ViewModel
-* @description 
-*/
+ * @function Knockout ViewModel
+ * @description 
+ */
 function places() {
   var self = this;
-  var defaultCity = 'montreal';
+  var defaultCity = 'paris';
   self.listOfPlaces = ko.observableArray([]);
   self.filteredPlaces = ko.observableArray([]);
   self.markers = ko.observableArray([]);
@@ -66,10 +65,10 @@ function places() {
   self.filter = ko.observable('');
 
   /**
-  * @function Google Map Initialization
-  * @description Create the map and center it on Montréal, CA.
-  * Style Map from: https://snazzymaps.com/style/151/ultra-light-with-labels
-  */
+   * @function Google Map Initialization
+   * @description Create the map and center it on Paris, FR.
+   * Style Map from: https://snazzymaps.com/style/151/ultra-light-with-labels
+   */
   self.initMap = function() {
 
     var style = [{
@@ -205,12 +204,12 @@ function places() {
 
     map = new google.maps.Map(document.getElementById('map'), {
       center: {
-        lat: 45.5016889,
-        lng: -73.567256
+        lat: 48.85341,
+        lng: 2.3488
       },
       styles: style,
       disableDefaultUI: true,
-      zoom: 12
+      zoom: 14
     });
     // Resize the map if the sidebar is visible (vw > 1099)
     if ($(window).width() > 1099) {
@@ -220,22 +219,18 @@ function places() {
     $('#map').height($(window).height());
   };
 
-  if($(window).width() < 1099) {
-    $('li').attr('data-target', '#js-bootstrap-offcanvas');
-  }
-
   /**
-  * @function filter
-  * @description Empty filteredPlaces,
-  * Use the self.filter() observable as global RegExp,
-  * Iterate over listOfPlaces and for each place :
-  * If the place has no marker, call placeMarker() 
-  * and push the new marker to the markers([]) observables array. 
-  * if the name or the category of the place match with the user input, 
-  * push the place in filteredPlace and set its marker to visible.
-  * Else, set its marker to hidden.
-  * Return filteredPlaces();
-  */
+   * @function filter
+   * @description Empty filteredPlaces,
+   * Use the self.filter() observable as global RegExp,
+   * Iterate over listOfPlaces and for each place :
+   * If the place has no marker, call placeMarker() 
+   * and push the new marker to the markers([]) observables array. 
+   * if the name or the category of the place match with the user input, 
+   * push the place in filteredPlace and set its marker to visible.
+   * Else, set its marker to hidden.
+   * Return filteredPlaces();
+   */
   self.filterPlace = ko.computed(function() {
 
     self.filteredPlaces([]);
@@ -264,13 +259,13 @@ function places() {
   });
 
   /**
-  * @function Animate Marker
-  * @description When the user click on a place in the list : 
-  * Animates the corresponding marker,
-  * Set the map center to the place coordinates and zoom.
-  * Close all infowindows and open the one corresponding to the place. 
-  * @param {object} clicked place in the list 
-  */
+   * @function Animate Marker
+   * @description When the user click on a place in the list : 
+   * Animates the corresponding marker,
+   * Set the map center to the place coordinates and zoom.
+   * Close all infowindows and open the one corresponding to the place. 
+   * @param {object} clicked place in the list 
+   */
   self.animateMarker = function(place) {
     toggleBounce(place.marker);
     moveMapCenter(place.lat, place.lng);
@@ -284,20 +279,20 @@ function places() {
   };
 
   /**
-  * @function Set the Google Map Center
-  * @param {number} latitude coordinates
-  * @param {number} longitude coordinates
-  */
+   * @function Set the Google Map Center
+   * @param {number} latitude coordinates
+   * @param {number} longitude coordinates
+   */
   function moveMapCenter(lat, lng) {
     var center = new google.maps.LatLng(lat, lng);
     map.panTo(center);
   }
 
   /**
-  * @function Set the places markers
-  * @description Create a new marker, set this marker to a new place's property 
-  * @param {object} place from listOfPlaces observableArray
-  */
+   * @function Set the places markers
+   * @description Create a new marker, set this marker to a new place's property 
+   * @param {object} place from listOfPlaces observableArray
+   */
   function placeMarker(place) {
     var marker;
     marker = new google.maps.Marker({
@@ -315,25 +310,25 @@ function places() {
   }
 
   /**
-  * @function Set infowindow to the place's marker
-  * @description Create infowindow, format and set content.
-  * Add a click event listener to the place's marker.
-  * @param {object} place from listOfPlaces observableArray
-  * @param {object} marker property 
-  */
+   * @function Set infowindow to the place's marker
+   * @description Create infowindow, format and set content.
+   * Add a click event listener to the place's marker.
+   * @param {object} place from listOfPlaces observableArray
+   * @param {object} marker property 
+   */
   function infoWindow(place, marker) {
 
     var formattedUrl = function() {
       if (place.url !== 'Website not available') {
         return "<div class='urlContainer'>" +
           "<a href='" + place.url + "'class='infoWindowurl'>" +
-          place.url + "</a> </div>"
+          place.url + "</a> </div>";
       } else {
         return "<div class='urlContainer'>" +
           "<span class='infowindowUrl'>" +
-          place.url + "</span> </div>"
+          place.url + "</span> </div>";
       }
-    }
+    };
 
     var infoWindowContent = "<div class='infoWindowContainer'>" +
       "<div class='nameContainer'>" +
@@ -368,10 +363,10 @@ function places() {
   }
 
   /**
-  * @function Marker Bounce Animation
-  * @description from https://developers.google.com/maps/documentation/javascript/examples/marker-animations
-  * @param {object} marker to animate.
-  */
+   * @function Marker Bounce Animation
+   * @description from https://developers.google.com/maps/documentation/javascript/examples/marker-animations
+   * @param {object} marker to animate.
+   */
   function toggleBounce(marker) {
     if (marker.setAnimation() !== null) {
       marker.setAnimation(null);
@@ -384,13 +379,13 @@ function places() {
   }
 
   /**
-  * @function Call the Foursquare API
-  * @description Empty the listOfPlaces observableArray.
-  * If a cityQuery is not empty, use it as place parameter for the jSON query. Else use the defaultCity variable.
-  * If successful, create a new object Place with the each place received and push them in the listOfPlaces observableArray.
-  * Call the method moveMapCenter with the new coordinates.
-  * If the loadinG fail, display an error message on the sidebar.
-  */
+   * @function Call the Foursquare API
+   * @description Empty the listOfPlaces observableArray.
+   * If a cityQuery is not empty, use it as place parameter for the jSON query. Else use the defaultCity variable.
+   * If successful, create a new object Place with the each place received and push them in the listOfPlaces observableArray.
+   * Call the method moveMapCenter with the new coordinates.
+   * If the loadinG fail, display an error message on the sidebar.
+   */
   self.loadFoursquarePlaces = function() {
 
     self.listOfPlaces([]);
@@ -398,14 +393,14 @@ function places() {
     var clientSecret = "UKDBXCJSYFG0AL3MDBMGWHHJSMAIR3S5V5NZISHJQOIKOMEP",
       clientId = "KKTBRM0OM2QIUW5TVMRYK42XV2FIU1AAN5SZY4OMOJB504VU",
       city = (cityQuery() !== "") ? cityQuery() : defaultCity,
-      query = "best nearby";
+      query = "topPicks";
 
     $.getJSON("https://api.foursquare.com/v2/venues/explore" +
         "?client_id=" + clientId +
         "&client_secret=" + clientSecret +
         "&near=" + city +
         "&v=20161222" +
-        "&query=" + query
+        "&section=" + query
       )
       .done(function(data) {
         var response = data.response.groups[0].items;
@@ -415,7 +410,6 @@ function places() {
           );
         });
         moveMapCenter(data.response.geocode.center.lat, data.response.geocode.center.lng);
-
       })
       .fail(function() {
         $('.error-message').html(
