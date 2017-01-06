@@ -7,7 +7,7 @@ a map of Foursquare's recommendations on a place. By default, the map is centere
 
 ### How to run ?
 
-Visit [https://mattldwig.github.io/](https://mattldwig.github.io/).
+Visit [this page](https://mattldwig.github.io/Neighborhood-Map/index.html).
 
 OR
 
