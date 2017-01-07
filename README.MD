@@ -7,12 +7,8 @@ a map of Foursquare's recommendations on a place. By default, the map is centere
 
 ### How to run ?
 
-Visit [this page](https://mattldwig.github.io/Neighborhood-Map/index.html).
-
-OR
-
 1. Clone this repo :
-`$ git clone https://github.com/MattLdwig/MattLdwig.github.io.git`
+`$ git clone https://github.com/MattLdwig/FEND-Nanodegree_Neighborhood-Map.git`
 2. Open index.html
 
 
